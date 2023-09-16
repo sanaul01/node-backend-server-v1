@@ -82,11 +82,32 @@ app.get('/', (req, res)=>{
     res.send("welcome to my server at node mongodb backend")
 });
 
-app.post('/api/v1/product', (req, res, next)=>{
-   const product = new Product(req.body);
+app.post('/api/v1/product', async(req, res, next)=>{
 
+    try {
+        // =====create method ======
+       
+        // const result = await Product.create(req.body)
 
-   product.save();
+        //=====Save method======
+    const product = new Product(req.body);
+    if(product.quantity == 0){
+        product.status= "out-of-stock"
+    }
+    const result = await product.save();
+   
+    res.status(200).json({
+    status:"success",
+    message:"Data sended successfully",
+    data: result
+   })
+    } catch (error) {
+        res.status(400).json({
+            status: "fail",
+            message: "Data could not send successfully",
+            error: error.message
+        })
+    }
 }); 
 
 module.exports = app;
