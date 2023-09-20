@@ -104,6 +104,7 @@ app.get('/', (req, res)=>{
     res.send("welcome to my server at node mongodb backend")
 });
 
+// ===========Post Data ==============
 app.post('/api/v1/product', async(req, res, next)=>{
 
     try {
@@ -131,5 +132,30 @@ app.post('/api/v1/product', async(req, res, next)=>{
         })
     }
 }); 
+
+// ============Get data===========
+app.get('/api/v1/product', async(req, res, next)=>{
+    try {
+        const products = await Product
+        .where("name").equals(/\w/)
+        .where("quantity").gt(200).lt(500)
+        .limit(2).sort({quantity: -1});
+
+        // ==================Query one data==================
+        // const product = await Product.findById("6505b6e7a4eb76c982f76216")
+        
+        res.status(200).json({
+            status: "success", 
+            data: products
+        })
+        
+    } catch (error) {
+       res.status(400).json({
+        status: "Fail data",
+        message: "Can not get data",
+        error: error.message
+       }) 
+    }
+})
 
 module.exports = app;
