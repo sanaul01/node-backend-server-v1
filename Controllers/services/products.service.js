@@ -21,7 +21,7 @@ exports.createProductService = async(data)=>{
     return product;
 };
 
-exports.updatePorductService = async(productId, data)=>{
+exports.updatePorductByIdService = async(productId, data)=>{
     const result = await Product.updateOne({_id: productId}, {$set: data},{runValidators: true});
     //==========anaother updated method=================
     // const product = await Product.findById(productId);
@@ -40,5 +40,15 @@ exports.bulkUpdateProductService = async(data)=>{
     });
 
     const result = await Promise.all(products);
+    return result;
+};
+
+exports.deleteProductByIdService = async(id)=>{
+    const result = await Product.deleteOne({_id: id});
+    return result;
+};
+
+exports.bulkDeleteProductService = async(ids)=>{
+    const result = await Product.deleteMany({_id: ids});
     return result;
 };

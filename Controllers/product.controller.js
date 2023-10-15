@@ -1,4 +1,4 @@
-const { getProductService, createProductService, updatePorductService, bulkUpdateProductService } = require("./services/products.service");
+const { getProductService, createProductService, updatePorductByIdService, bulkUpdateProductService, deleteProductByIdService, bulkDeleteProductService } = require("./services/products.service");
 
 exports.getProducts = async(req, res, next)=>{
     try {
@@ -46,7 +46,7 @@ exports.postProduct = async(req, res, next)=>{
 exports.updateProduct = async(req, res, next)=>{
     try {
         const {id} = req.params;
-        const result = await updatePorductService(id, req.body);
+        const result = await updatePorductByIdService(id, req.body);
         res.status(200).json({
             status:"success",
             message:"Updated successfully",
@@ -60,6 +60,8 @@ exports.updateProduct = async(req, res, next)=>{
         })
     }
 };
+
+
 exports.bulkUpdateProduct = async(req, res, next)=>{
     try {
         console.log(req.body)
@@ -76,4 +78,49 @@ exports.bulkUpdateProduct = async(req, res, next)=>{
             error: error.message
         })
     }
-}
+};
+
+
+exports.deleteProductById = async(req, res, next)=>{
+    try {
+        const {id} = req.params;
+        const result = await deleteProductByIdService(id)
+
+        if(!result.deleteCount){
+            res.status(400).json({
+                status: "fail",
+                error: "could not delet the product"
+            })
+        }
+
+        res.status(200).json({
+            status: "success",
+            message: "Deleted successfully",
+            data: result
+        })
+    } catch (error) {
+        res.status(400).json({
+            status: "fail",
+            message: "Data could not delete successfully",
+            error: error.message
+        })
+    }
+};
+
+exports.bulkDeleteProduct = async(req, res, next)=>{
+    try {
+        console.log(req.body)
+        const result = await bulkDeleteProductService(req.body.ids);
+        res.status(200).json({
+            status:"success",
+            message:"Delete successfully",
+            data: result
+           })
+    } catch (error) {
+        res.status(400).json({
+            status: "fail",
+            message: "Data could not delete successfully",
+            error: error.message
+        })
+    }
+};
