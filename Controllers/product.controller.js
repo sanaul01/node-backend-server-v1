@@ -2,7 +2,23 @@ const { getProductService, createProductService, updatePorductByIdService, bulkU
 
 exports.getProducts = async(req, res, next)=>{
     try {
-        const products = await getProductService();
+        const filters = {...req.query}
+        const excludeFields = ['sort', 'page', 'limit'];
+        excludeFields.forEach(field=> delete filters[field])
+
+        // console.log('filter',queryObject)
+        // console.log(req.query)
+        const queries = {};
+        if(req.query.sort){
+            const sortBy = req.query.sort.split(',').join(' ');
+            queries.sortBy = sortBy;
+        };
+
+        if(req.query.fields){
+            const fields = req.query.fields.split(',').join(' ');
+            queries.fields = fields;
+        }
+        const products = await getProductService(filters, queries);
         res.status(200).json({
             status: "success", 
             data: products
