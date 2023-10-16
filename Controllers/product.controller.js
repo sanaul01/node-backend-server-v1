@@ -2,9 +2,16 @@ const { getProductService, createProductService, updatePorductByIdService, bulkU
 
 exports.getProducts = async(req, res, next)=>{
     try {
-        const filters = {...req.query}
+        let filters = {...req.query}
+
         const excludeFields = ['sort', 'page', 'limit'];
         excludeFields.forEach(field=> delete filters[field])
+
+        // use operator sisterm like{gt, gte, lt, lte}. using filter
+        let filtersString = JSON.stringify(filters);
+        filtersString = filtersString.replace(/\b(gt|gte|lt|lte)\b/g, match=>`$${match}`);
+
+        filters = JSON.parse(filtersString)
 
         const queries = {};
         if(req.query.sort){

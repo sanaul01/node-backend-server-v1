@@ -6,7 +6,7 @@ exports.getProductService = async (filters, queries) => {
     // .where("quantity").gt(200).lt(500)
     // .limit(2).sort({quantity: -1});
 
-    const products = await Product.find({})
+    const products = await Product.find(filters)
         .select(queries.fields)
         .sort(queries.sortBy);
     return products;
