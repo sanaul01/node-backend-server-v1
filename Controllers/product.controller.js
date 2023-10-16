@@ -6,8 +6,6 @@ exports.getProducts = async(req, res, next)=>{
         const excludeFields = ['sort', 'page', 'limit'];
         excludeFields.forEach(field=> delete filters[field])
 
-        // console.log('filter',queryObject)
-        // console.log(req.query)
         const queries = {};
         if(req.query.sort){
             const sortBy = req.query.sort.split(',').join(' ');
